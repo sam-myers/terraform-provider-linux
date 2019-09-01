@@ -1,4 +1,4 @@
-module github.com/terraform-providers/terraform-provider-template
+module github.com/sam-myers/terraform-provider-remote
 
 require (
 	github.com/hashicorp/hcl v1.0.0 // indirect
