@@ -2,11 +2,14 @@ TEST?=$$(go list ./... |grep -v 'vendor')
 GOFMT_FILES?=$$(find . -name '*.go' |grep -v vendor)
 WEBSITE_REPO=github.com/hashicorp/terraform-website
 PKG_NAME=template
+PLUGIN_DIR=~/.terraform.d/plugins/
 
-default: build
+default: fmt test build
 
 build: fmtcheck
-	go install
+	go build
+	mkdir -p $(PLUGIN_DIR)
+	mv terraform-provider-remote $(PLUGIN_DIR)
 
 test: fmtcheck
 	go test -i $(TEST) || exit 1
