@@ -1,2 +1,2 @@
-Remote (linux) Terraform Provider
+Linux Terraform Provider
 ==================

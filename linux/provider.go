@@ -1,4 +1,4 @@
-package template
+package linux
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"

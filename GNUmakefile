@@ -9,7 +9,7 @@ default: fmt test build
 build: fmtcheck
 	go build
 	mkdir -p $(PLUGIN_DIR)
-	mv terraform-provider-remote $(PLUGIN_DIR)
+	mv terraform-provider-linux $(PLUGIN_DIR)
 
 test: fmtcheck
 	go test -i $(TEST) || exit 1
