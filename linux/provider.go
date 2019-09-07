@@ -7,8 +7,11 @@ import (
 
 func Provider() terraform.ResourceProvider {
 	return &schema.Provider{
+		ResourcesMap: map[string]*schema.Resource{
+			"linux_file": linuxFile(),
+		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"linux_ssh_connection": dataSourceLinuxSSHConnection(),
+			"linux_ssh_connection": linuxDataSourceSSHConnection(),
 		},
 	}
 }

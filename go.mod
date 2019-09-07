@@ -1,6 +1,7 @@
 module github.com/sam-myers/terraform-provider-linux
 
 require (
+	github.com/google/uuid v1.1.1
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/hashicorp/hcl2 v0.0.0-20190416162332-2c5a4b7d729a
 	github.com/hashicorp/terraform v0.12.0-alpha4.0.20190424121927-9327eedb0417
