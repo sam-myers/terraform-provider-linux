@@ -1,4 +1,10 @@
 plugins:
+  duplication:
+    enabled: true
+    config:
+      languages:
+        go:
+          mass_threshold: 140
   gofmt:
     enabled: true
   govet:
