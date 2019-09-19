@@ -1,3 +1,11 @@
+version: "2"
+
+checks:
+  # Go idiomatically has many return statements, one for each error check
+  # more error checking is obviously a good thing
+  return-statements:
+    enabled: false
+
 plugins:
   duplication:
     enabled: true
