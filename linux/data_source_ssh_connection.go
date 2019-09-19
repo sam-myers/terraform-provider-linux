@@ -7,87 +7,89 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
+var linuxDataSourceSSHConnectionSchema = map[string]*schema.Schema{
+	"host": {
+		Type:     schema.TypeString,
+		Required: true,
+	},
+	"user": {
+		Type:     schema.TypeString,
+		Optional: true,
+		Default:  "root",
+	},
+	"port": {
+		Type:     schema.TypeInt,
+		Optional: true,
+		Default:  22,
+	},
+
+	"password": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"private_key": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"certificate": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"host_key": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+
+	"agent": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"agent_identity": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+
+	"bastion_host": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"bastion_user": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"bastion_password": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"bastion_private_key": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"bastion_certificate": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+
+	"timeout": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+	"script_path": {
+		Type:     schema.TypeString,
+		Optional: true,
+	},
+
+	// Computed
+	"json": {
+		Type:     schema.TypeString,
+		Computed: true,
+	},
+}
+
 func linuxDataSourceSSHConnection() *schema.Resource {
 	return &schema.Resource{
-		Read: linuxDataSourceSSHConnectionRead,
-		Schema: map[string]*schema.Schema{
-			"host": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"user": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "root",
-			},
-			"port": {
-				Type:     schema.TypeInt,
-				Optional: true,
-				Default:  22,
-			},
-
-			"password": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"private_key": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"certificate": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"host_key": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-
-			"agent": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"agent_identity": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-
-			"bastion_host": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"bastion_user": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"bastion_password": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"bastion_private_key": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"bastion_certificate": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-
-			"timeout": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-			"script_path": {
-				Type:     schema.TypeString,
-				Optional: true,
-			},
-
-			// Computed
-			"json": {
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-		},
+		Read:   linuxDataSourceSSHConnectionRead,
+		Schema: linuxDataSourceSSHConnectionSchema,
 	}
 }
 
