@@ -7,7 +7,7 @@ Linux Terraform Provider
 Usage
 ---------------------
 
-```
+```hcl-terraform
 provider "linux" {}
 ```
 
@@ -19,15 +19,15 @@ Building The Provider
 Clone repository to: `$GOPATH/src/github.com/sam-myers/terraform-provider-linux`
 
 ```sh
-$ mkdir -p $GOPATH/src/github.com/sam-myers; cd $GOPATH/src/github.com/sam-myers
-$ git clone git@github.com:sam-myers/terraform-provider-linux
+mkdir -p $GOPATH/src/github.com/sam-myers; cd $GOPATH/src/github.com/sam-myers
+git clone git@github.com:sam-myers/terraform-provider-linux
 ```
 
 Enter the provider directory and build the provider
 
 ```sh
-$ cd $GOPATH/src/github.com/sam-myers/terraform-provider-linux
-$ make build
+cd $GOPATH/src/github.com/sam-myers/terraform-provider-linux
+make build
 ```
 
 Documentation
@@ -47,16 +47,16 @@ If you wish to work on the provider, you'll first need [Go](http://www.golang.or
 To compile the provider, run `make build`. This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
 
 ```sh
-$ make build
+make build
 ...
-$ $GOPATH/bin/terraform-provider-template
+$GOPATH/bin/terraform-provider-template
 ...
 ```
 
 In order to test the provider, you can simply run `make test`.
 
 ```sh
-$ make test
+make test
 ```
 
 In order to run the full suite of Acceptance tests, run `make testacc`.
@@ -64,5 +64,5 @@ In order to run the full suite of Acceptance tests, run `make testacc`.
 *Note:* Acceptance tests create real resources, and often cost money to run.
 
 ```sh
-$ make testacc
+make testacc
 ```
