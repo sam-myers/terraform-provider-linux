@@ -48,11 +48,6 @@ func linuxFile() *schema.Resource {
 }
 
 func linuxFileCreate(d *schema.ResourceData, meta interface{}) error {
-	err := SetConnectionInfo(d)
-	if err != nil {
-		return err
-	}
-
 	destination := d.Get("destination").(string)
 	content := d.Get("content").(string)
 	contentReader := strings.NewReader(content)
@@ -77,11 +72,6 @@ func linuxFileCreate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func linuxFileDelete(d *schema.ResourceData, meta interface{}) error {
-	err := SetConnectionInfo(d)
-	if err != nil {
-		return err
-	}
-
 	comm, err := GetCommunicator(d)
 	if err != nil {
 		return err
@@ -103,14 +93,10 @@ func linuxFileDelete(d *schema.ResourceData, meta interface{}) error {
 }
 
 func linuxFileRead(d *schema.ResourceData, meta interface{}) error {
-	err := SetConnectionInfo(d)
-	if err != nil {
-		return err
-	}
-
 	comm, err := GetCommunicator(d)
 	if err != nil {
-		return err
+		// Don't change state if read fails
+		return nil
 	}
 
 	destination := d.Get("destination").(string)
