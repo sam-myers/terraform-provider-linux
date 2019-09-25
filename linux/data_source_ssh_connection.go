@@ -146,8 +146,9 @@ func linuxDataSourceSSHConnectionRead(d *schema.ResourceData, meta interface{}) 
 	}
 	SetOrPanic(d, "json", string(bytes))
 
-	hash := md5.New().Sum(bytes)
-	d.SetId(string(hash))
+	hash := md5.New()
+	hash.Write(bytes)
+	d.SetId(fmt.Sprintf("%x", hash.Sum(nil)))
 
 	return nil
 }
