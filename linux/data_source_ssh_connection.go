@@ -144,7 +144,7 @@ func linuxDataSourceSSHConnectionRead(d *schema.ResourceData, meta interface{}) 
 	if err != nil {
 		return fmt.Errorf("encoding to JSON: %s", err)
 	}
-	SetOrPanic(d, "json", string(bytes))
+	setOrPanic(d, "json", string(bytes))
 
 	hash := md5.New()
 	hash.Write(bytes)

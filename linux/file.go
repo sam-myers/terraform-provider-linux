@@ -52,7 +52,7 @@ func linuxFileCreate(d *schema.ResourceData, meta interface{}) error {
 	content := d.Get("content").(string)
 	contentReader := strings.NewReader(content)
 
-	comm, err := GetCommunicator(d)
+	comm, err := getCommunicator(d)
 	if err != nil {
 		return err
 	}
@@ -66,13 +66,13 @@ func linuxFileCreate(d *schema.ResourceData, meta interface{}) error {
 
 	hash := md5.New()
 	_, _ = io.WriteString(hash, content)
-	SetOrPanic(d, "hash_md5", fmt.Sprintf("%x", hash.Sum(nil)))
+	setOrPanic(d, "hash_md5", fmt.Sprintf("%x", hash.Sum(nil)))
 
 	return nil
 }
 
 func linuxFileDelete(d *schema.ResourceData, meta interface{}) error {
-	comm, err := GetCommunicator(d)
+	comm, err := getCommunicator(d)
 	if err != nil {
 		return err
 	}
@@ -93,7 +93,7 @@ func linuxFileDelete(d *schema.ResourceData, meta interface{}) error {
 }
 
 func linuxFileRead(d *schema.ResourceData, meta interface{}) error {
-	comm, err := GetCommunicator(d)
+	comm, err := getCommunicator(d)
 	if err != nil {
 		// Don't change state if read fails
 		return nil
@@ -118,10 +118,10 @@ func linuxFileRead(d *schema.ResourceData, meta interface{}) error {
 
 	changedOnRemoteMessage := "changed on remote"
 	if oldHash != newHash && d.Get("content").(string) == changedOnRemoteMessage {
-		SetOrPanic(d, "content", changedOnRemoteMessage+" :) nice try")
+		setOrPanic(d, "content", changedOnRemoteMessage+" :) nice try")
 
 	} else if oldHash != newHash {
-		SetOrPanic(d, "content", changedOnRemoteMessage)
+		setOrPanic(d, "content", changedOnRemoteMessage)
 	}
 
 	return nil

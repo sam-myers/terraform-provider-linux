@@ -17,17 +17,17 @@ func TestAccFile_basic(t *testing.T) {
 		},
 		Steps: []resource.TestStep{
 			{
-				Config: GetFixture("file/basic/1_setup.tf"),
+				Config: getFixture("file/basic/1_setup.tf"),
 				Check:  nil,
 			},
 			{
-				Config: GetFixture("file/basic/2_create_file.tf"),
+				Config: getFixture("file/basic/2_create_file.tf"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("linux_file.test_txt", "hash_md5", "47058241a059e3bd04cf358f958d6929"),
 				),
 			},
 			{
-				Config: GetFixture("file/basic/3_change_contents.tf"),
+				Config: getFixture("file/basic/3_change_contents.tf"),
 				Check: resource.ComposeTestCheckFunc(
 					resource.TestCheckResourceAttr("linux_file.test_txt", "hash_md5", "0869757ea0e2d93f81447990d5421526"),
 				),

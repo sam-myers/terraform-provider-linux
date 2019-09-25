@@ -14,14 +14,14 @@ import (
 	"text/template"
 )
 
-func SetOrPanic(d *schema.ResourceData, key string, value interface{}) {
+func setOrPanic(d *schema.ResourceData, key string, value interface{}) {
 	err := d.Set(key, value)
 	if err != nil {
 		panic(fmt.Sprintf("invariant broken, bug in provider. trying to set key `%s` with value `%+v` failed: %s", key, value, err))
 	}
 }
 
-func GetCommunicator(d *schema.ResourceData) (communicator.Communicator, error) {
+func getCommunicator(d *schema.ResourceData) (communicator.Communicator, error) {
 	var state *terraform.InstanceState
 
 	err := SetConnectionInfo(d)
@@ -62,7 +62,7 @@ func GetCommunicator(d *schema.ResourceData) (communicator.Communicator, error) 
 	return comm, nil
 }
 
-func GetFixture(path string) string {
+func getFixture(path string) string {
 	file, err := os.Open("./fixtures/" + path)
 	if err != nil {
 		panic(fmt.Sprintf("invalid path %s: %s", path, err))
