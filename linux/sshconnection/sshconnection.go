@@ -1,7 +1,7 @@
 package sshconnection
 
 import (
-	"crypto/md5"
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"github.com/cenkalti/backoff"
@@ -11,6 +11,9 @@ import (
 	"sync"
 )
 
+// Represents linux connection
+// https://www.terraform.io/docs/provisioners/connection.html
+// plus some logic to cache communicator
 type SSHConnection struct {
 	Host string `json:"host,omitempty"`
 	User string `json:"user,omitempty"`
@@ -36,13 +39,20 @@ type SSHConnection struct {
 	comm     communicator.Communicator
 	commErr  error
 	commOnce sync.Once
+
+	id     string
+	idOnce sync.Once
 }
 
+// Gives a unique ID (used for the data source)
 func (s *SSHConnection) ID() string {
-	bytes, _ := json.Marshal(s)
-	hash := md5.New()
-	hash.Write(bytes)
-	return fmt.Sprintf("%x", hash.Sum(nil))
+	s.idOnce.Do(func() {
+		bytes, _ := json.Marshal(s)
+		hash := sha256.New()
+		hash.Write(bytes)
+		s.id = fmt.Sprintf("%x", hash.Sum(nil))
+	})
+	return s.id
 }
 
 func (s *SSHConnection) Communicator() (communicator.Communicator, error) {
