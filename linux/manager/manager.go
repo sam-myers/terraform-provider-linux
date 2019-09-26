@@ -8,11 +8,12 @@ import (
 )
 
 var manCreated sync.Once
-var man *manager
+var man *Manager
 
-func Manager() *manager {
+// Get the global manager instance
+func GetManager() *Manager {
 	manCreated.Do(func() {
-		man = &manager{
+		man = &Manager{
 			lock:        sync.Mutex{},
 			connections: make(map[string]sshconnection.SSHConnection, 0),
 		}
@@ -20,23 +21,23 @@ func Manager() *manager {
 	return man
 }
 
-type manager struct {
+type Manager struct {
 	lock        sync.Mutex
 	connections map[string]sshconnection.SSHConnection
 }
 
-func (m *manager) AddConnection(conn sshconnection.SSHConnection) {
+func (m *Manager) AddConnection(conn sshconnection.SSHConnection) {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 	m.connections[conn.ID()] = conn
 }
 
-func (m *manager) GetConnection(id string) (conn sshconnection.SSHConnection, found bool) {
+func (m *Manager) GetConnection(id string) (conn sshconnection.SSHConnection, found bool) {
 	conn, found = m.connections[id]
 	return
 }
 
-func (m *manager) GetCommunicator(id string) (communicator.Communicator, error) {
+func (m *Manager) GetCommunicator(id string) (communicator.Communicator, error) {
 	conn, found := m.connections[id]
 	if !found {
 		return nil, fmt.Errorf("no communicator found with id %s", id)

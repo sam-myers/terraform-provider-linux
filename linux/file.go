@@ -53,7 +53,7 @@ func linuxFileCreate(d *schema.ResourceData, meta interface{}) error {
 	content := d.Get("content").(string)
 	contentReader := strings.NewReader(content)
 
-	comm, err := manager.Manager().GetCommunicator(d.Get("connection_id").(string))
+	comm, err := manager.GetManager().GetCommunicator(d.Get("connection_id").(string))
 	if err != nil {
 		return err
 	}
@@ -73,7 +73,7 @@ func linuxFileCreate(d *schema.ResourceData, meta interface{}) error {
 }
 
 func linuxFileDelete(d *schema.ResourceData, meta interface{}) error {
-	comm, err := manager.Manager().GetCommunicator(d.Get("connection_id").(string))
+	comm, err := manager.GetManager().GetCommunicator(d.Get("connection_id").(string))
 
 	destination := d.Get("destination").(string)
 	rmCmd := fmt.Sprintf(`rm -f "%s"`, destination)
@@ -91,7 +91,7 @@ func linuxFileDelete(d *schema.ResourceData, meta interface{}) error {
 }
 
 func linuxFileRead(d *schema.ResourceData, meta interface{}) error {
-	comm, err := manager.Manager().GetCommunicator(d.Get("connection_id").(string))
+	comm, err := manager.GetManager().GetCommunicator(d.Get("connection_id").(string))
 	if err != nil {
 		// Don't change state if read fails
 		return nil
