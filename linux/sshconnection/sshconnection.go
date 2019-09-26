@@ -55,6 +55,7 @@ func (s *SSHConnection) ID() string {
 	return s.id
 }
 
+// Creates exactly one communicator
 func (s *SSHConnection) Communicator() (communicator.Communicator, error) {
 	s.commOnce.Do(func() {
 		id := uuid.New().String()
@@ -75,6 +76,7 @@ func (s *SSHConnection) Communicator() (communicator.Communicator, error) {
 	return s.comm, s.commErr
 }
 
+// Converts connection to the format needed to create a communicator
 func (s *SSHConnection) ToMap() map[string]string {
 	commInfo := make(map[string]string)
 
