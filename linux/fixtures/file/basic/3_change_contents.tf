@@ -24,12 +24,11 @@ data "local_file" "ssh_private_key" {
 data "linux_ssh_connection" "docker" {
   user        = "terraform"
   host        = "localhost"
-  port        = 2222
+  port        = docker_container.container.ports.0.external
   private_key = data.local_file.ssh_private_key.content
 }
 
 resource "linux_file" "test_txt" {
-  depends_on    = ["docker_container.container"]
   content       = "foo bar biz baz"
   destination   = "/home/terraform/test.txt"
   connection_id = data.linux_ssh_connection.docker.id
