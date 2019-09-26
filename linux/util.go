@@ -55,11 +55,6 @@ func getCommunicator(d *schema.ResourceData) (communicator.Communicator, error) 
 		return comm, fmt.Errorf("connecting: %s", err)
 	}
 
-	err = comm.Connect(nil)
-	if err != nil {
-		return comm, fmt.Errorf("connecting: %s", err)
-	}
-
 	return comm, nil
 }
 
