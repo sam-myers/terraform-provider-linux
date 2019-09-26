@@ -4,6 +4,11 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
+	"github.com/cenkalti/backoff"
+	"github.com/google/uuid"
+	"github.com/hashicorp/terraform/communicator"
+	"github.com/hashicorp/terraform/helper/schema"
+	"sync"
 )
 
 type SSHConnection struct {
@@ -27,6 +32,10 @@ type SSHConnection struct {
 
 	Timeout    string `json:"timeout,omitempty"`
 	ScriptPath string `json:"script_path,omitempty"`
+
+	comm     communicator.Communicator
+	commErr  error
+	commOnce sync.Once
 }
 
 func (s *SSHConnection) ID() string {
@@ -34,6 +43,26 @@ func (s *SSHConnection) ID() string {
 	hash := md5.New()
 	hash.Write(bytes)
 	return fmt.Sprintf("%x", hash.Sum(nil))
+}
+
+func (s *SSHConnection) Communicator() (communicator.Communicator, error) {
+	s.commOnce.Do(func() {
+		id := uuid.New().String()
+		d := schema.ResourceData{}
+		d.SetConnInfo(s.ToMap())
+		d.SetId(id)
+		s.comm, s.commErr = communicator.New(d.State())
+		d.SetId("")
+
+		if s.commErr != nil {
+			return
+		}
+
+		s.commErr = backoff.Retry(func() error {
+			return s.comm.Connect(nil)
+		}, backoff.NewExponentialBackOff())
+	})
+	return s.comm, s.commErr
 }
 
 func (s *SSHConnection) ToMap() map[string]string {

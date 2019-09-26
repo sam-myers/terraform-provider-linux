@@ -1,6 +1,8 @@
 package manager
 
 import (
+	"fmt"
+	"github.com/hashicorp/terraform/communicator"
 	"github.com/sam-myers/terraform-provider-linux/linux/sshconnection"
 	"sync"
 )
@@ -8,7 +10,7 @@ import (
 var manCreated sync.Once
 var man *manager
 
-func GetManager() *manager {
+func Manager() *manager {
 	manCreated.Do(func() {
 		man = &manager{
 			lock:        sync.Mutex{},
@@ -32,4 +34,12 @@ func (m *manager) AddConnection(conn sshconnection.SSHConnection) {
 func (m *manager) GetConnection(id string) (conn sshconnection.SSHConnection, found bool) {
 	conn, found = m.connections[id]
 	return
+}
+
+func (m *manager) GetCommunicator(id string) (communicator.Communicator, error) {
+	conn, found := m.connections[id]
+	if !found {
+		return nil, fmt.Errorf("no communicator found with id %s", id)
+	}
+	return conn.Communicator()
 }
