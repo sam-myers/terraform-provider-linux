@@ -17,7 +17,7 @@ func linuxFile() *schema.Resource {
 		Create: linuxFileCreate,
 		Delete: linuxFileDelete,
 		Schema: map[string]*schema.Schema{
-			"connection_json": {
+			"connection_id": {
 				Type:      schema.TypeString,
 				ForceNew:  true,
 				Required:  true,

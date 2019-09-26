@@ -29,8 +29,8 @@ data "linux_ssh_connection" "docker" {
 }
 
 resource "linux_file" "test_txt" {
-  depends_on      = ["docker_container.container"]
-  content         = "foo bar biz baz"
-  destination     = "/home/terraform/test.txt"
-  connection_json = data.linux_ssh_connection.docker.json
+  depends_on    = ["docker_container.container"]
+  content       = "foo bar biz baz"
+  destination   = "/home/terraform/test.txt"
+  connection_id = data.linux_ssh_connection.docker.id
 }

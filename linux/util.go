@@ -8,6 +8,7 @@ import (
 	"github.com/hashicorp/terraform/communicator"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
+	"github.com/sam-myers/terraform-provider-linux/linux/manager"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -60,6 +61,17 @@ func getCommunicator(d *schema.ResourceData) (communicator.Communicator, error) 
 	}
 
 	return comm, nil
+}
+
+func SetConnectionInfo(d *schema.ResourceData) error {
+	connectionId := d.Get("connection_id").(string)
+	conn, found := manager.GetManager().GetConnection(connectionId)
+	if !found {
+		return fmt.Errorf("no connection of id: %s", connectionId)
+	}
+
+	d.SetConnInfo(conn.ToMap())
+	return nil
 }
 
 func getFixture(path string) string {
