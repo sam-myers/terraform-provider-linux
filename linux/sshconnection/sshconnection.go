@@ -11,7 +11,7 @@ import (
 	"sync"
 )
 
-// Represents linux connection
+// SSHConnection represents a linux connection
 // https://www.terraform.io/docs/provisioners/connection.html
 // plus some logic to cache communicator
 type SSHConnection struct {
@@ -44,7 +44,7 @@ type SSHConnection struct {
 	idOnce sync.Once
 }
 
-// Gives a unique ID (used for the data source)
+// ID gives a unique ID (used for the data source)
 func (s *SSHConnection) ID() string {
 	s.idOnce.Do(func() {
 		bytes, _ := json.Marshal(s)
@@ -55,7 +55,7 @@ func (s *SSHConnection) ID() string {
 	return s.id
 }
 
-// Creates exactly one communicator
+// Communicator creates exactly one communicator
 func (s *SSHConnection) Communicator() (communicator.Communicator, error) {
 	s.commOnce.Do(func() {
 		id := uuid.New().String()
@@ -76,7 +76,7 @@ func (s *SSHConnection) Communicator() (communicator.Communicator, error) {
 	return s.comm, s.commErr
 }
 
-// Converts connection to the format needed to create a communicator
+// ToMap converts connection to the format needed to create a communicator
 func (s *SSHConnection) ToMap() map[string]string {
 	commInfo := make(map[string]string)
 
