@@ -10,7 +10,7 @@ import (
 var manCreated sync.Once
 var man *Manager
 
-// Get the global manager instance
+// GetManager gets the global manager instance
 func GetManager() *Manager {
 	manCreated.Do(func() {
 		man = &Manager{
@@ -21,26 +21,31 @@ func GetManager() *Manager {
 	return man
 }
 
+// Manager allows resources to access useful information about related resources
 type Manager struct {
 	lock        sync.Mutex
 	connections map[string]sshconnection.SSHConnection
 }
 
+// AddConnection tells the manager about an SSH connection
 func (m *Manager) AddConnection(conn sshconnection.SSHConnection) {
 	m.lock.Lock()
 	defer m.lock.Unlock()
 	m.connections[conn.ID()] = conn
 }
 
+// GetConnection allows resources to get an SSH connection by its ID
 func (m *Manager) GetConnection(id string) (conn sshconnection.SSHConnection, found bool) {
 	conn, found = m.connections[id]
 	return
 }
 
-func (m *Manager) GetCommunicator(id string) (communicator.Communicator, error) {
-	conn, found := m.connections[id]
+// GetCommunicator gets a communicator, used to directly interface with a Linux machine,
+// from a connection ID
+func (m *Manager) GetCommunicator(connectionId string) (communicator.Communicator, error) {
+	conn, found := m.connections[connectionId]
 	if !found {
-		return nil, fmt.Errorf("no communicator found with id %s", id)
+		return nil, fmt.Errorf("no communicator found with connectionId %s", connectionId)
 	}
 	return conn.Communicator()
 }
