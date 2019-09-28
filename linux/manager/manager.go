@@ -8,12 +8,12 @@ import (
 )
 
 var manCreated sync.Once
-var man *Manager
+var man *manager
 
-// GetManager gets the global manager instance
-func GetManager() *Manager {
+// getManager gets the global manager instance
+func getManager() *manager {
 	manCreated.Do(func() {
-		man = &Manager{
+		man = &manager{
 			lock:        sync.Mutex{},
 			connections: make(map[string]sshconnection.SSHConnection, 0),
 		}
@@ -21,28 +21,38 @@ func GetManager() *Manager {
 	return man
 }
 
-// Manager allows resources to access useful information about related resources
-type Manager struct {
+// manager allows resources to access useful information about related resources
+type manager struct {
 	lock        sync.Mutex
 	connections map[string]sshconnection.SSHConnection
 }
 
 // AddConnection tells the manager about an SSH connection
-func (m *Manager) AddConnection(conn sshconnection.SSHConnection) {
+func AddConnection(conn sshconnection.SSHConnection) {
+	m := getManager()
 	m.lock.Lock()
 	defer m.lock.Unlock()
+
 	m.connections[conn.ID()] = conn
 }
 
 // GetConnection allows resources to get an SSH connection by its ID
-func (m *Manager) GetConnection(id string) (conn sshconnection.SSHConnection, found bool) {
+func GetConnection(id string) (conn sshconnection.SSHConnection, found bool) {
+	m := getManager()
+	m.lock.Lock()
+	defer m.lock.Unlock()
+
 	conn, found = m.connections[id]
 	return
 }
 
 // GetCommunicator gets a communicator, used to directly interface with a Linux machine,
 // from a connection ID
-func (m *Manager) GetCommunicator(connectionID string) (communicator.Communicator, error) {
+func GetCommunicator(connectionID string) (communicator.Communicator, error) {
+	m := getManager()
+	m.lock.Lock()
+	defer m.lock.Unlock()
+
 	conn, found := m.connections[connectionID]
 	if !found {
 		return nil, fmt.Errorf("no communicator found with connectionID %s", connectionID)

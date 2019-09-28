@@ -128,7 +128,7 @@ func linuxDataSourceSSHConnectionRead(d *schema.ResourceData, meta interface{}) 
 	hash := md5.New()
 	hash.Write(bytes)
 	d.SetId(connection.ID())
-	manager.GetManager().AddConnection(connection)
+	manager.AddConnection(connection)
 
 	return nil
 }
