@@ -3,11 +3,7 @@ package linux
 import (
 	"bytes"
 	"fmt"
-	"github.com/cenkalti/backoff"
-	"github.com/google/uuid"
-	"github.com/hashicorp/terraform/communicator"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/hashicorp/terraform/terraform"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -19,47 +15,6 @@ func setOrPanic(d *schema.ResourceData, key string, value interface{}) {
 	if err != nil {
 		panic(fmt.Sprintf("invariant broken, bug in provider. trying to set key `%s` with value `%+v` failed: %s", key, value, err))
 	}
-}
-
-func getCommunicator(d *schema.ResourceData) (communicator.Communicator, error) {
-	var state *terraform.InstanceState
-
-	err := SetConnectionInfo(d)
-	if err != nil {
-		return nil, fmt.Errorf("set connection info: %s", err)
-	}
-
-	if d.Id() == "" {
-		id := uuid.New().String()
-		d.SetId(id)
-		state = d.State()
-		d.SetId("")
-	} else {
-		state = d.State()
-	}
-
-	if state == nil {
-		return nil, fmt.Errorf("no state")
-	}
-
-	comm, err := communicator.New(state)
-	if err != nil {
-		return nil, fmt.Errorf("creating communicator: %s", err)
-	}
-
-	err = backoff.Retry(func() error {
-		return comm.Connect(nil)
-	}, backoff.NewExponentialBackOff())
-	if err != nil {
-		return comm, fmt.Errorf("connecting: %s", err)
-	}
-
-	err = comm.Connect(nil)
-	if err != nil {
-		return comm, fmt.Errorf("connecting: %s", err)
-	}
-
-	return comm, nil
 }
 
 func getFixture(path string) string {
