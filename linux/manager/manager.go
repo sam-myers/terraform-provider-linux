@@ -42,10 +42,10 @@ func (m *Manager) GetConnection(id string) (conn sshconnection.SSHConnection, fo
 
 // GetCommunicator gets a communicator, used to directly interface with a Linux machine,
 // from a connection ID
-func (m *Manager) GetCommunicator(connectionId string) (communicator.Communicator, error) {
-	conn, found := m.connections[connectionId]
+func (m *Manager) GetCommunicator(connectionID string) (communicator.Communicator, error) {
+	conn, found := m.connections[connectionID]
 	if !found {
-		return nil, fmt.Errorf("no communicator found with connectionId %s", connectionId)
+		return nil, fmt.Errorf("no communicator found with connectionID %s", connectionID)
 	}
 	return conn.Communicator()
 }
